@@ -35,7 +35,7 @@ function App() {
     <>
     <div id="appContainer">      
       <h1>
-        hello real review
+        real review
       </h1>
       <form action="" onSubmit={e => handleUserInput(e)}>
         <input type='text' onChange={e => setUserQuery(e.target.value)}/>
