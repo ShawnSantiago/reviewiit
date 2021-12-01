@@ -5,13 +5,13 @@ import { useState } from 'react';
 function App() {
   const [userQuery, setUserQuery] = useState('');
 
-  const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}&limit=10&sort=relevance`;
+  const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}&limit=100&sort=relevance`;
 
   const handleUserInput = (e: any) => {
     e.preventDefault();
     setUserQuery(e.target.value)
     fetch(`${searchUrl}`).then(response => response.json())
-    .then(data => console.log(processData(data)))
+    .then(data => console.log(sortData(processData(data))))
   },
   processData = (data: any) => {
     return data.data.children.map((x: any) => {
@@ -23,6 +23,11 @@ function App() {
         score: x.data["score"],
         subbreddit:x.data["subreddit"],
       }
+    })
+  },
+  sortData = (data: any) =>{
+   return data.sort(( a:any , b:any ) => {
+      return  b.score - a.score;
     })
   }
   
