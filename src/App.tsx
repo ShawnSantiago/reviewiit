@@ -11,7 +11,19 @@ function App() {
     e.preventDefault();
     setUserQuery(e.target.value)
     fetch(`${searchUrl}`).then(response => response.json())
-    .then(data => console.log(data))
+    .then(data => console.log(processData(data)))
+  },
+  processData = (data: any) => {
+    return data.data.children.map((x: any) => {
+      return {
+        id: x.data["id"],
+        selftext: x.data["selftext"],
+        title: x.data["title"],
+        url: x.data["url"],
+        score: x.data["score"],
+        subbreddit:x.data["subreddit"],
+      }
+    })
   }
   
   return (
