@@ -26,7 +26,16 @@ function App() {
     })
   },
   sortData = (data: any) =>{
-   return data.sort(( a:any , b:any ) => {
+    // Rank data by giving a score to each variable out of 10 
+
+    // For data point "score" 1-10 = 1 | 10 - 25 = 2 | 25 - 50 = 3 | 50 - 100 = 4 | 100 - 250 = 5 | 250 - 500 = 6 | 500 - 1000 = 7 | 1000 - 2500 = 8 | 5000 - 10000 = 9 | 10000> 10
+
+    // For data point "selftext" | if text include words = 1 | if text includes whole words ie "Magic Bullet" = 5 | if text includes whole words plus "review, guide" = 10
+
+    // For data point "title" | if text include words = 1 | if text includes whole words ie "Magic Bullet" = 5 | if text includes whole words plus "review, guide" = 10 
+
+    //For data point "subreddit" is related to word entered ie Magic Bullet - Subreddit is Blenders. PS. not sure how to rank or do this 
+    return data.sort(( a:any , b:any ) => {
       return  b.score - a.score;
     })
   }
