@@ -1,3 +1,6 @@
+import nlp from 'compromise';
+var natural = require('natural');
+
 
 export const processData = (data: any) => {
   return data.data.children.map((x: any) => {
@@ -25,9 +28,17 @@ export const getKarmaScore = (data: number) => {
     if (data > 5000)                return  10
 } 
 
-export const getSelfTextScore = (userQuery: string ,data: string) => {
-  console.log(data.includes(userQuery))
-  if(data.includes(userQuery)) return 5
-  if(data.includes(`${userQuery} review`)) return 10
-  
+export const getTextScore = (userQuery: string ,data: string) => {
+  const TfIdf = natural.TfIdf,
+        tfidf = new TfIdf();
+        tfidf.addDocument(data);
+  return (tfidf.tfidfs(userQuery, 0)[0])
+}
+
+export const getSentimentScore = (data: string) => {
+  var Analyzer = require('natural').SentimentAnalyzer;
+  var stemmer = require('natural').PorterStemmer;
+  var analyzer = new Analyzer("English", stemmer, "afinn");
+  var tokenizer = new natural.WordTokenizer();
+  return analyzer.getSentiment(tokenizer.tokenize(data))
 }
