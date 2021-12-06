@@ -10,7 +10,7 @@ import {
 function App() {
   const [userQuery, setUserQuery] = useState('');
 
-  const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}&limit=1000&sort=relevance`;
+  const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}%20review&limit=100&sort=relevance`;
 
   const handleUserInput = (e: any) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ function App() {
       listing.relevancyScore = relevancyScore
     }
   
-    return data.sort(( a: any , b: any ) => b.relevancyScore - a.relevancyScore).filter((( a: any ) => a.relevancyScore > 0))
+    return filterListingBasedOnTitle.sort(( a: any , b: any ) => b.relevancyScore - a.relevancyScore).filter((( a: any ) => a.relevancyScore > 0))
   }
   
   return (

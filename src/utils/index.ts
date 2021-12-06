@@ -1,6 +1,6 @@
 import nlp from 'compromise';
 var natural = require('natural');
-
+var tokenizer = new natural.WordTokenizer();
 
 export const processData = (data: any) => {
   return data.data.children.map((x: any) => {
@@ -32,13 +32,16 @@ export const getTextScore = (userQuery: string ,data: string) => {
   const TfIdf = natural.TfIdf,
         tfidf = new TfIdf();
         tfidf.addDocument(data);
-  return (tfidf.tfidfs(userQuery, 0)[0])
+        let doc = nlp(data)
+        console.log(doc.json())
+  //If user query is a name with more then one word. Look for word distance in data. Eg Name - Magic Bullet, Data - The bullet is made of magic. Find the distance from each word to measure relation 
+  return (tfidf.tfidfs([userQuery,'review'], 0)[0])
 }
 
 export const getSentimentScore = (data: string) => {
   var Analyzer = require('natural').SentimentAnalyzer;
   var stemmer = require('natural').PorterStemmer;
   var analyzer = new Analyzer("English", stemmer, "afinn");
-  var tokenizer = new natural.WordTokenizer();
+
   return analyzer.getSentiment(tokenizer.tokenize(data))
 }
