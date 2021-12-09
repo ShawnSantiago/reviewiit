@@ -20,26 +20,23 @@ function App() {
   }
   
   const sortData = (data: any) =>{
+    // Filter out titles that don't include search terms
     const filterListingBasedOnTitle = data.filter((( a: any ) =>  getTextScore(userQuery, a['title']) > 0))
 
-    
+    // Loop through relevant listings 
     for (let index = 0; index < filterListingBasedOnTitle.length; index++) {
       const listing = filterListingBasedOnTitle[index]
       let relevancyScore = 0
-        
-      // For text data points | if text include words = 1 | if text includes whole words ie "Magic Bullet" = 5 | if text includes whole words plus "review, guide" = 10
 
+      // Get relevancy score for each listing
       relevancyScore += getTextScore(userQuery, listing['selftext']) ?? 0
-      
-
-      //For data point "subreddit" is related to word entered ie Magic Bullet - Subreddit is Blenders. PS. not sure how to rank or do this 
-      
-      // For data point "score" 0-10 = 1 | 10 - 25 = 2 | 25 - 50 = 3 | 50 - 100 = 4 | 100 - 250 = 5 | 250 - 500 = 6 | 500 - 1000 = 7 | 1000 - 2500 = 8 | 2500 - 10000 = 9 | 10000> 10
-      // relevancyScore += getKarmaScore(listing['score']) ?? 0
+     
+      // Get sentiment score for each listing
       listing.sentimentScore = getSentimentScore(listing['selftext'])
       listing.relevancyScore = relevancyScore
     }
   
+    // Return sorted listings by relevancy score
     return filterListingBasedOnTitle.sort(( a: any , b: any ) => b.relevancyScore - a.relevancyScore).filter((( a: any ) => a.relevancyScore > 0))
   }
   

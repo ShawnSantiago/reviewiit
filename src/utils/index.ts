@@ -1,6 +1,6 @@
 import nlp from 'compromise';
 var natural = require('natural');
-var tokenizer = new natural.WordTokenizer();
+const tokenizer = new natural.WordTokenizer()
 
 export const processData = (data: any) => {
   return data.data.children.map((x: any) => {
@@ -28,13 +28,39 @@ export const getKarmaScore = (data: number) => {
     if (data > 5000)                return  10
 } 
 
-export const getTextScore = (userQuery: string ,data: string) => {
-  const TfIdf = natural.TfIdf,
-        tfidf = new TfIdf();
-        tfidf.addDocument(data);
-        let doc = nlp(data)
-        console.log(doc.json())
-  //If user query is a name with more then one word. Look for word distance in data. Eg Name - Magic Bullet, Data - The bullet is made of magic. Find the distance from each word to measure relation 
+export const getTextScore = (userQuery: string, data: string) => {
+  
+  // Get frequency of terms in user query
+  const tfidf = new natural.TfIdf()
+  
+  tfidf.addDocument(data)
+        
+  const tokenizedQuery = tokenizer.tokenize(userQuery)
+  const tokenizedData = tokenizer.tokenize(data)
+  
+  
+  
+  /*
+  
+  console.log(tokenizedQuery)
+  console.log(tokenizedData)
+
+  tokenizedData.map((a:string,b:string) => {
+    if(a == tokenizedQuery[0] && b == tokenizedQuery[0])
+  })
+
+  ['magic','bullet','v2','test']
+  
+  ['I','like','magic','and','bullet']
+ 
+  const word1 = magic
+  const  word2 = bullet
+  
+  */
+
+
+  // If user query is a name with more then one word. Look for word distance in data. 
+  // Eg. Name - Magic Bullet, Data - The bullet is made of magic. Find the distance from each word to measure relation 
   return (tfidf.tfidfs([userQuery,'review'], 0)[0])
 }
 
