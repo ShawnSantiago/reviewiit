@@ -32,32 +32,23 @@ export const getTextScore = (userQuery: string, data: string) => {
   
   // Get frequency of terms in user query
   const tfidf = new natural.TfIdf()
-  
-  tfidf.addDocument(data)
-        
   const tokenizedQuery = tokenizer.tokenize(userQuery)
   const tokenizedData = tokenizer.tokenize(data)
-  
-  
-  
-  /*
-  
-  console.log(tokenizedQuery)
-  console.log(tokenizedData)
 
-  tokenizedData.map((a:string,b:string) => {
-    if(a == tokenizedQuery[0] && b == tokenizedQuery[0])
-  })
-
-  ['magic','bullet','v2','test']
-  
-  ['I','like','magic','and','bullet']
- 
-  const word1 = magic
-  const  word2 = bullet
-  
-  */
-
+  const loopThruQuery = (userQuery:any, counter:number, parsedData:any) =>{  
+    let currentCount = counter > 0 ? counter : 0;
+      if(tokenizedQuery[currentCount+1]){
+        loopThruQuery(userQuery,currentCount+1, parsedData.filter((a:any,b:any) => {
+          if(a == tokenizedQuery[currentCount] ) return tokenizedQuery[currentCount+1] == tokenizedData[b+1]
+          else return true
+        }))
+      }
+      return parsedData.filter((a:any,b:any) => {
+        if(a == tokenizedQuery[currentCount] ) return tokenizedQuery[currentCount-1] == tokenizedData[b-1]
+        else return true
+      })
+  }
+  tfidf.addDocument( loopThruQuery(tokenizedQuery, 0, tokenizedData ))
 
   // If user query is a name with more then one word. Look for word distance in data. 
   // Eg. Name - Magic Bullet, Data - The bullet is made of magic. Find the distance from each word to measure relation 
