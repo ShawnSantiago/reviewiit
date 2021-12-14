@@ -1,8 +1,8 @@
 var natural = require('natural');
 const tokenizer = new natural.WordTokenizer()
 
-export const processData = (data: any) => {
-  return data.data.children.map((x: any) => {
+export const processData = (data) => {
+  return data.data.children.map((x) => {
     return {
       id: x.data["id"],
       selftext: x.data["selftext"],
@@ -14,7 +14,7 @@ export const processData = (data: any) => {
   })
 }
 
-export const getKarmaScore = (data: number) => {
+export const getKarmaScore = (data) => {
     if (data > 0 && data < 10)      return  1
     if ( data > 10 && data < 25)    return  2
     if ( data > 25 && data < 50)    return  3
@@ -27,7 +27,7 @@ export const getKarmaScore = (data: number) => {
     if (data > 5000)                return  10
 } 
 
-export const getTextScore = (userQuery: string, data: string) => {
+export const getTextScore = (userQuery, data) => {
   
   // Get frequency of terms in user query
   const tfidf = new natural.TfIdf()
@@ -51,15 +51,19 @@ export const getTextScore = (userQuery: string, data: string) => {
   //     }
     
   // }
-  const loopThruQuery = (userQuery:any, counter:number, parsedData:any) =>{  
+  const loopThruQuery = (userQuery, counter, parsedData) =>{  
     let currentCount = counter > 0 ? counter : 0;
       if(typeof tokenizedQuery[currentCount+1] !== 'undefined'){
-        loopThruQuery(userQuery,currentCount+1, parsedData.filter((a:any,b:any) => {
+
+        // Magic - remo
+        loopThruQuery(userQuery,currentCount+1, parsedData.filter((a,b) => {
           if(a === tokenizedQuery[currentCount] ) return tokenizedQuery[currentCount+1] === tokenizedData[b+1]
           else return true
         }))
       }
-      return parsedData.filter((a:any,b:any) => {
+
+      // Bullet
+      return parsedData.filter((a,b) => {
         if(a === tokenizedQuery[currentCount] ) return tokenizedQuery[currentCount-1] === tokenizedData[b-1]
         else return true
       })
@@ -70,7 +74,7 @@ export const getTextScore = (userQuery: string, data: string) => {
   return (tfidf.tfidfs(tokenizedQuery, 0)[0])
 }
 
-export const getSentimentScore = (data: string) => {
+export const getSentimentScore = (data) => {
   var Analyzer = require('natural').SentimentAnalyzer;
   var stemmer = require('natural').PorterStemmer;
   var analyzer = new Analyzer("English", stemmer, "afinn");
@@ -78,9 +82,9 @@ export const getSentimentScore = (data: string) => {
   return analyzer.getSentiment(tokenizer.tokenize(data))
 }
 
-export const sortData = (data: any, userQuery:string) =>{
+export const sortData = (data, userQuery) =>{
   // Filter out titles that don't include search terms
-  const filterListingBasedOnTitle = data.filter((( a: any ) =>  getTextScore(userQuery, a['title']) > 0))
+  const filterListingBasedOnTitle = data.filter((( a ) =>  getTextScore(userQuery, a['title']) > 0))
 
   // Loop through relevant listings 
   for (let index = 0; index < filterListingBasedOnTitle.length; index++) {
@@ -96,5 +100,5 @@ export const sortData = (data: any, userQuery:string) =>{
   }
 
   // Return sorted listings by relevancy score
-  return filterListingBasedOnTitle.sort(( a: any , b: any ) => b.relevancyScore - a.relevancyScore).filter((( a: any ) => a.relevancyScore > 0))
+  return filterListingBasedOnTitle.sort(( a , b ) => b.relevancyScore - a.relevancyScore).filter((( a ) => a.relevancyScore > 0))
 }
