@@ -24,11 +24,7 @@ function MainForm() {
       <form action="" onSubmit={ e => handleUserInput(e) }>
         <input type='text' onChange={ e => setuserQuery(e.target.value)}/>
         <input type='submit' value='search reddit' />
-        <div id="results">
-          <ul className="list-group">
-              {productData && productData.map((listitem, idx)=> ( <li key={idx} className="">{listitem.title} </li>))}
-          </ul>
-        </div>
+        <div id="results"><ProductCardGrid data={productData}/></div>
       </form>
     )
 }
