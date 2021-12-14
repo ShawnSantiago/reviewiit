@@ -1,4 +1,4 @@
-import ProductCard from './components/productCard';
+
 import MainForm from './components/mainForm';
 function App() {
   
@@ -9,7 +9,6 @@ function App() {
         real review
       </h1>
       <MainForm />
-      <div id="results"><ProductCard /></div>
     </div>
     </>
   )

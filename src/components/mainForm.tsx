@@ -1,5 +1,7 @@
 import React from 'react';
 import { sortData,processData } from '../utils';
+import ProductCard from './productCard';
+
 interface MyProps {}
 
 interface MyState {
@@ -21,10 +23,15 @@ class MainForm extends React.Component<MyProps, MyState> {
         .then(data => this.setState({setproductData : sortData(processData(data),this.state.userQuery)}))
       }
     render() {
+        const data = {
+            data: this.state.setproductData
+        };
         return    <form action="" onSubmit={e => this.handleUserInput(e)}>
         <input type='text' onChange={e => this.setState({userQuery: e.target.value})}/>
         <input type='submit' value='search reddit' />
+        <div id="results"><ProductCard {...data}/></div>
       </form>
+      
         }
     }
 export default MainForm;
