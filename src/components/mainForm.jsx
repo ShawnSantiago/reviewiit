@@ -4,9 +4,6 @@ import ProductCardGrid from './ProductCardGrid';
 
 
 function MainForm() {
-
-    console.log('rendered mainform')
-
     const [userQuery, setuserQuery] = useState();
     const [productData, setProductData] = useState();
     
@@ -21,10 +18,13 @@ function MainForm() {
     }
      
     return (
-      <form action="" onSubmit={ e => handleUserInput(e) }>
-        <input type='text' onChange={ e => setuserQuery(e.target.value)}/>
-        <input type='submit' value='search reddit' />
-        <div id="results"><ProductCardGrid data={productData}/></div>
+      <form className="container mx-auto flex flex-col" action="" onSubmit={ e => handleUserInput(e) }>
+        <div className="container max-w-sm self-center">
+          <input className="w-full h-12 px-4 mb-2 text-lg text-gray-700 placeholder-gray-600 border rounded-lg focus:shadow-outline" type='text' onChange={ e => setuserQuery(e.target.value)}/>
+          <input className="w-full h-12 px-6 text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800" type='submit' value='search reddit' />
+        </div>
+        
+        <div id="results" className=""><ProductCardGrid data={productData}/></div>
       </form>
     )
 }
