@@ -3,7 +3,7 @@ import React from 'react';
 function ProductCard(props){ 
 
     return (
-        <ul className="list-group container grid gap-4 grid-cols-2 p-8">
+        <ul className="list-group container grid gap-4 grid-cols-2 sm:grid-cols-1 p-8">
             { props.data && props.data.map((listitem, idx)=> ( <li key={idx} className="w-full  overflow-hidden rounded-lg shadow-lg sm:flex flex-col">
                 <a href={listitem.url}>
                     {listitem.img &&<div className="w-full">
