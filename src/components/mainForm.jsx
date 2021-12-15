@@ -5,7 +5,7 @@ import ProductCardGrid from './ProductCardGrid';
 
 function MainForm() {
     const [userQuery, setuserQuery] = useState();
-    const [productData, setProductData] = useState();
+    const [productData, setProductData] = useState([]);
     const [processing, setProcessing] = useState(false);
     const handleUserInput = (e) => {
       e.preventDefault();
