@@ -1,10 +1,9 @@
-import React from 'react';
 
 function ProductCard(props){ 
 
     return (
-        <ul className="list-group container grid gap-4 grid-cols-1 sm:grid-cols-2 p-8">
-            { props.data && props.data.map((listitem, idx)=> ( <li key={idx} className="w-full  overflow-hidden rounded-lg shadow-lg sm:flex flex-col">
+        <ul className={props.data ? "list-group container grid gap-4 grid-cols-1 sm:grid-cols-2 p-8":' container'}>
+            { props.data ? props.data.map((listitem, idx)=> ( <li key={idx} className="w-full  overflow-hidden rounded-lg shadow-lg sm:flex flex-col">
                 <a href={listitem.url}>
                     {listitem.img &&<div className="w-full">
                         <img className="object-cover w-full h-48" src="https://images.pexels.com/photos/853199/pexels-photo-853199.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Flower and sky"/>
@@ -15,7 +14,8 @@ function ProductCard(props){
                         <p className="leading-normal text-gray-700 max-w-md text-ellipsis max-h-full truncate ">{listitem.selftext}</p>
                     </div>
                 </a>
-            </li>))}
+            </li>)) :<li  className="w-full text-center p-10"> <span className=" ">No Results Found :(</span> </li>
+            }
         </ul>
     )
 }   

@@ -11,7 +11,7 @@ function MainForm() {
       e.preventDefault();
      
       console.log(processing)
-      const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}%20review&limit=100&sort=relevance`;
+      const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}%20review&sort=relevance`;
 
       fetch(`${searchUrl}`)
         .then(response => response.json())
