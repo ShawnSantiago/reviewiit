@@ -9,9 +9,7 @@ function MainForm() {
     const [processing, setProcessing] = useState(false);
     const handleUserInput = (e) => {
       e.preventDefault();
-     
-      console.log(processing)
-      const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}%20review&sort=relevance`;
+      const searchUrl = `https://www.reddit.com/search.json?q=${userQuery}%20review&limit=1000&sort=relevance`;
 
       fetch(`${searchUrl}`)
         .then(response => response.json())

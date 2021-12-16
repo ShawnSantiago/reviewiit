@@ -2,7 +2,7 @@ var natural = require('natural');
 const tokenizer = new natural.WordTokenizer()
 
 export const processData = (data) => {
-  return data.data.children.map((x) => {
+  return data.data.children.length > 0 ? data.data.children.map((x) => {
     return {
       id: x.data["id"],
       selftext: x.data["selftext"],
@@ -11,7 +11,7 @@ export const processData = (data) => {
       score: x.data["score"],
       subbreddit: x.data["subreddit"],
     }
-  })
+  }) : []
 }
 
 export const getKarmaScore = (data) => {
@@ -28,50 +28,37 @@ export const getKarmaScore = (data) => {
 } 
 
 export const getTextScore = (userQuery, data) => {
-  
   // Get frequency of terms in user query
   const tfidf = new natural.TfIdf()
   const tokenizedQuery = tokenizer.tokenize(userQuery)
   const tokenizedData = tokenizer.tokenize(data.toLowerCase())
-  // function loopThruQuery  (userQuery:any, counter:number, data:any){  
-  //   let parsedData = data;
-  //     for (let index = 0; index < userQuery.length; index++) {
-  //       const element = userQuery[index];
-  //       if(index === userQuery.length - 1){
-  //         const finalData = parsedData.filter((a:any,b:any) => {
-  //           if(a === element ) return userQuery[index-1] === tokenizedData[b-1]
-  //           else return true
-  //         })
-  //         return finalData
-  //       }
-  //         parsedData = data.filter((a:any,b:any) => {
-  //           if(a === element )  return userQuery[userQuery.length - 1] === tokenizedData[b+1]
-  //           else return true
-  //         })
-  //     }
-    
-  // }
-  const loopThruQuery = (userQuery, counter, parsedData) =>{  
-    let currentCount = counter > 0 ? counter : 0;
-      if(typeof tokenizedQuery[currentCount+1] !== 'undefined'){
 
-        // Magic - remo
-        loopThruQuery(userQuery,currentCount+1, parsedData.filter((a,b) => {
-          if(a === tokenizedQuery[currentCount] ) return tokenizedQuery[currentCount+1] === tokenizedData[b+1]
-          else return true
-        }))
-      }
-
-      // Bullet
-      return parsedData.filter((a,b) => {
-        if(a === tokenizedQuery[currentCount] ) return tokenizedQuery[currentCount-1] === tokenizedData[b-1]
-        else return true
-      })
+  function callback (a,b) {
+    const counter = this.count,
+          length = this.userQueryLength;
+    if(counter == length - 1){
+      if(a === tokenizedQuery[counter] ) 
+        return tokenizedQuery[counter-1] === tokenizedData[b-1]
+      else return true
+    }else{
+      if(a === tokenizedQuery[counter] )  return tokenizedQuery[counter+1] === tokenizedData[b+1]
+      else return true
+    }
   }
-  tfidf.addDocument( loopThruQuery(tokenizedQuery, 0, tokenizedData ))
+
+  const loopThruQuery = (userQuery, counter, parsedData) =>{  
+    let currentCount = counter;
+    if(currentCount === userQuery.length - 1  ){
+      return parsedData.filter(callback,{count:counter,userQueryLength:userQuery.length})
+    }else{
+      return loopThruQuery(userQuery,currentCount+1, parsedData.filter(callback,{count:counter,userQueryLength:userQuery.length}))
+    }
+  }
+  
+  tfidf.addDocument( tokenizedQuery.length > 1 ? loopThruQuery(tokenizedQuery, 0, tokenizedData ) : tokenizedData)
   // If user query is a name with more then one word. Look for word distance in data. 
   // Eg. Name - Magic Bullet, Data - The bullet is made of magic. Find the distance from each word to measure relation 
-  return (tfidf.tfidfs(tokenizedQuery, 0)[0])
+  return (tokenizedData.length > 0 ? tfidf.tfidfs(tokenizedQuery, 0)[0]: 0.1)
 }
 
 export const getSentimentScore = (data) => {
@@ -101,4 +88,9 @@ export const sortData = (data, userQuery) =>{
 
   // Return sorted listings by relevancy score
   return filterListingBasedOnTitle.sort(( a , b ) => b.relevancyScore - a.relevancyScore).filter((( a ) => a.relevancyScore > 0))
+}
+
+export function htmlDecode(input) {
+  const doc = new DOMParser().parseFromString(input, "text/html");
+  return doc.documentElement.textContent;
 }
