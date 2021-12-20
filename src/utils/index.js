@@ -30,13 +30,13 @@ export const getKarmaScore = (data) => {
 export const getTextScore = (userQuery, data) => {
   // Get frequency of terms in user query
   const tfidf = new natural.TfIdf()
-  const tokenizedQuery = tokenizer.tokenize(userQuery)
+  const tokenizedQuery = tokenizer.tokenize(userQuery.toLowerCase())
   const tokenizedData = tokenizer.tokenize(data.toLowerCase())
 
   function callback (a,b) {
     const counter = this.count,
           length = this.userQueryLength;
-    if(counter == length - 1){
+    if(counter === length - 1){
       if(a === tokenizedQuery[counter] ) 
         return tokenizedQuery[counter-1] === tokenizedData[b-1]
       else return true
